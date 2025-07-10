@@ -1,28 +1,58 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+# Build folders
+bin/
+obj/
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
-# Environment files
-/.env
+# Visual Studio
+.vscode/
+.vs/
 
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
+# Rider
+.idea/
+*.sln.iml
 
-# TypeScript cache
-*.tsbuildinfo
+# ASP.NET Core secrets
+**/appsettings.*.json
+!appsettings.json
+
+# EF Core Migrations snapshot files
+Migrations/*Designer.cs
+Migrations/*Snapshot.cs
 
 # Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.log
+logs/
+
+# Database
+*.db
+*.mdf
+*.ldf
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Compiled DLLs and EXEs
+*.dll
+*.exe
+
+# Test results
+TestResults/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Auto-generated files
+*.g.cs
+*.generated.cs
+
+# Others
+.DS_Store
+Thumbs.db

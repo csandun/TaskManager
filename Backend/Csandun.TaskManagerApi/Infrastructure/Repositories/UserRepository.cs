@@ -10,10 +10,7 @@ public class UserRepository(TaskManagerDbContext dbContext) : IUserRepository
     public async Task<User> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
-        if (user is null)
-        {
-            throw new UserNotFound(id);
-        }
+        if (user is null) throw new UserNotFound(id);
 
         return user;
     }
@@ -22,10 +19,7 @@ public class UserRepository(TaskManagerDbContext dbContext) : IUserRepository
     {
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash, cancellationToken);
-        if (user is null)
-        {
-            throw new AuthenticationFailed(username);
-        }
+        if (user is null) throw new AuthenticationFailed(username);
 
         return user;
     }

@@ -10,10 +10,7 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
     public async Task<TaskItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var taskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-        if (taskItem is null)
-        {
-            throw new TaskItemNotFound(id);
-        }
+        if (taskItem is null) throw new TaskItemNotFound(id);
         return taskItem;
     }
 
@@ -29,7 +26,8 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
         var existingTaskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == taskItem.Id, cancellationToken);
         if (existingTaskItem is null)
         {
-            throw new TaskItemNotFound(taskItem.Id);;
+            throw new TaskItemNotFound(taskItem.Id);
+            ;
         }
 
         existingTaskItem.Title = taskItem.Title;
@@ -44,10 +42,7 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var taskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-        if (taskItem is null)
-        {
-            throw new TaskItemNotFound(id);
-        }
+        if (taskItem is null) throw new TaskItemNotFound(id);
         dbContext.TaskItems.Remove(taskItem);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
@@ -64,19 +59,16 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
     public async Task<IEnumerable<TaskItem>> GetByUserIdAndPriorityAsync(int userId, PriorityEnum priority, CancellationToken cancellationToken = default)
     {
         var taskItems = await dbContext.TaskItems
-            .Where(t => t.UserId == userId &&  t.Priority == priority)
+            .Where(t => t.UserId == userId && t.Priority == priority)
             .OrderByDescending(o => o.CreatedAt)
             .ToListAsync(cancellationToken);
         return taskItems;
     }
-    
-    public async Task<TaskItem> UpdateCompletedAsync(int id, bool isCompleted = true, CancellationToken cancellationToken = default)
+
+    public async Task<TaskItem> UpdateStatusAsync(int id, bool isCompleted = true, CancellationToken cancellationToken = default)
     {
         var taskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-        if (taskItem is null)
-        {
-            throw new TaskItemNotFound(id);
-        }
+        if (taskItem is null) throw new TaskItemNotFound(id);
 
         taskItem.IsCompleted = isCompleted;
         await dbContext.SaveChangesAsync(cancellationToken);

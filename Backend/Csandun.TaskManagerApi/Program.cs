@@ -1,5 +1,7 @@
 using System.Text.Json;
 using Csandun.TaskManagerApi.Infrastructure.DbContext;
+using Csandun.TaskManagerApi.Infrastructure.Repositories;
+using Csandun.TaskManagerApi.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Csandun.TaskManagerApi.Middleware;
 
@@ -15,6 +17,11 @@ builder.Services.AddControllers()
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddTransient<ITaskItemRepository, TaskItemRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 builder.Services.AddDbContext<TaskManagerDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TaskManagerConnection")));

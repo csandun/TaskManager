@@ -1,6 +1,6 @@
 ﻿namespace Csandun.TaskManagerApi.Dtos;
 
-public class UserLoginRequest
+public class UserLoginDto
 {
     public string Username { get; set; }
     public string Password { get; set; }

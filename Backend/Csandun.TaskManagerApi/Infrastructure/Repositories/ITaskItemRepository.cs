@@ -10,5 +10,5 @@ public interface ITaskItemRepository
     Task DeleteAsync(int id, CancellationToken cancellationToken);
     Task<IEnumerable<TaskItem>> GetByUserIdAndStatusAsync(int userId, bool isCompleted, CancellationToken cancellationToken);
     Task<IEnumerable<TaskItem>> GetByUserIdAndPriorityAsync(int userId, PriorityEnum priority, CancellationToken cancellationToken);
-    Task<TaskItem> UpdateCompletedAsync(int id, bool isCompleted, CancellationToken cancellationToken);
+    Task<TaskItem> UpdateStatusAsync(int id, bool isCompleted, CancellationToken cancellationToken);
 }

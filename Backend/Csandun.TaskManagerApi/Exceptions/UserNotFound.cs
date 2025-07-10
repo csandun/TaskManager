@@ -6,7 +6,7 @@ public class UserNotFound : KeyNotFoundException
         : base($"User with Id {id} not found.")
     {
     }
-    
+
     public UserNotFound(string username)
         : base($"User with username '{username}' not found.")
     {

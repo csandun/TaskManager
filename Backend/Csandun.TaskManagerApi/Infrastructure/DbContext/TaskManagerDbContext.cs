@@ -6,7 +6,9 @@ namespace Csandun.TaskManagerApi.Infrastructure.DbContext;
 
 public class TaskManagerDbContext : Microsoft.EntityFrameworkCore.DbContext
 {
-    public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options) { }
+    public TaskManagerDbContext(DbContextOptions<TaskManagerDbContext> options) : base(options)
+    {
+    }
 
     public DbSet<TaskItem> TaskItems { get; set; }
     public DbSet<User> Users { get; set; }
@@ -16,5 +18,4 @@ public class TaskManagerDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new TaskItemConfiguration());
     }
-    
 }

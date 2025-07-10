@@ -5,3 +5,7 @@
 ### Database update
 
 ```dotnet ef database update --project Csandun.TaskManagerApi --startup-project Csandun.TaskManagerApi```
+
+### TODOs
+- [ ] Add Fluent validation
+- [ ] Add services 

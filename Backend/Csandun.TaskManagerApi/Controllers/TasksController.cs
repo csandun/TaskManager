@@ -44,9 +44,9 @@ public class TasksController(ITaskItemRepository taskRepository, IMapper mapper)
     }
 
     [HttpGet("user/{userId}")]
-    public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetByUserIdAndStatus(int userId, [FromQuery] bool isCompleted = false, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetByUserIdAndStatus(int userId, CancellationToken cancellationToken = default)
     {
-        var tasks = await taskRepository.GetByUserIdAndStatusAsync(userId, isCompleted, cancellationToken);
+        var tasks = await taskRepository.GetByUserIdAndStatusAsync(userId, cancellationToken);
         var taskDtos = mapper.Map<IEnumerable<TaskItemDto>>(tasks);
         return Ok(taskDtos);
     }

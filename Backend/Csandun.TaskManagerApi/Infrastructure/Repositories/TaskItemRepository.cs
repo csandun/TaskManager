@@ -47,10 +47,10 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TaskItem>> GetByUserIdAndStatusAsync(int userId, bool isCompleted = false, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TaskItem>> GetByUserIdAndStatusAsync(int userId, CancellationToken cancellationToken = default)
     {
         var taskItems = await dbContext.TaskItems
-            .Where(t => t.UserId == userId && t.IsCompleted == isCompleted)
+            .Where(t => t.UserId == userId)
             .OrderByDescending(o => o.CreatedAt)
             .ToListAsync(cancellationToken);
         return taskItems;

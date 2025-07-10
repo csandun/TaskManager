@@ -6,12 +6,12 @@ export enum TaskPriority {
 }
 
 export interface TaskItem {
-  id: string;
+  id: number;
   title: string;
   description?: string;
-  completed: boolean;
+  isCompleted: boolean;
   priority: TaskPriority;
   dueDate?: Date;
   createdAt: Date;
-  userId: string;
+  userId: number;
 }

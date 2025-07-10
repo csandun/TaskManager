@@ -33,6 +33,11 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
                 StatusCode = (int)HttpStatusCode.BadRequest,
                 Message = ex.Message
             },
+            UnauthorizedAccessException ex => new ErrorResponse
+            {
+                StatusCode = (int)HttpStatusCode.Unauthorized,
+                Message = ex.Message
+            },
             _ => new ErrorResponse
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError,

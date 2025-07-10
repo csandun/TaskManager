@@ -24,7 +24,7 @@ public class UserRepository(TaskManagerDbContext dbContext) : IUserRepository
             .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash, cancellationToken);
         if (user is null)
         {
-            throw new UserNotFound(username);
+            throw new AuthenticationFailed(username);
         }
 
         return user;

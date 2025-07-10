@@ -1,4 +1,5 @@
-﻿using Csandun.TaskManagerApi.Infrastructure.DbContext;
+﻿using Csandun.TaskManagerApi.Exceptions;
+using Csandun.TaskManagerApi.Infrastructure.DbContext;
 using Csandun.TaskManagerApi.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,9 +7,13 @@ namespace Csandun.TaskManagerApi.Infrastructure.Repositories;
 
 public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepository
 {
-    public async Task<TaskItem?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<TaskItem> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var taskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+        if (taskItem is null)
+        {
+            throw new TaskItemNotFound(id);
+        }
         return taskItem;
     }
 
@@ -22,9 +27,9 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
     public async Task<TaskItem> UpdateAsync(TaskItem taskItem, CancellationToken cancellationToken = default)
     {
         var existingTaskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == taskItem.Id, cancellationToken);
-        if (existingTaskItem == null)
+        if (existingTaskItem is null)
         {
-            throw new KeyNotFoundException($"TaskItem with ID {taskItem.Id} not found.");
+            throw new TaskItemNotFound(taskItem.Id);;
         }
 
         existingTaskItem.Title = taskItem.Title;
@@ -39,9 +44,9 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var taskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-        if (taskItem == null)
+        if (taskItem is null)
         {
-            throw new KeyNotFoundException($"TaskItem with ID {id} not found.");
+            throw new TaskItemNotFound(id);
         }
         dbContext.TaskItems.Remove(taskItem);
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -65,12 +70,12 @@ public class TaskItemRepository(TaskManagerDbContext dbContext) : ITaskItemRepos
         return taskItems;
     }
     
-    public async Task<TaskItem> UpdateCompletedAsync(int id, bool isCompleted, CancellationToken cancellationToken = default)
+    public async Task<TaskItem> UpdateCompletedAsync(int id, bool isCompleted = true, CancellationToken cancellationToken = default)
     {
         var taskItem = await dbContext.TaskItems.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-        if (taskItem == null)
+        if (taskItem is null)
         {
-            throw new KeyNotFoundException($"TaskItem with ID {id} not found.");
+            throw new TaskItemNotFound(id);
         }
 
         taskItem.IsCompleted = isCompleted;

@@ -4,7 +4,7 @@ namespace Csandun.TaskManagerApi.Infrastructure.Repositories;
 
 public interface ITaskItemRepository
 {
-    Task<TaskItem?> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<TaskItem> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<TaskItem> AddAsync(TaskItem taskItem, CancellationToken cancellationToken);
     Task<TaskItem> UpdateAsync(TaskItem taskItem, CancellationToken cancellationToken);
     Task DeleteAsync(int id, CancellationToken cancellationToken);

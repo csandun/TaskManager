@@ -1,6 +1,0 @@
-@Csandun.TaskManager_HostAddress = http://localhost:5062
-
-GET {{Csandun.TaskManager_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

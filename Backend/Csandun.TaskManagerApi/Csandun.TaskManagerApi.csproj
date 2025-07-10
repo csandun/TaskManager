@@ -23,7 +23,6 @@
       <Folder Include="Dtos\Tasks\" />
       <Folder Include="Dtos\User\" />
       <Folder Include="Infrastructure\Migrations\" />
-      <Folder Include="Infrastructure\Repositories\" />
     </ItemGroup>
 
 </Project>

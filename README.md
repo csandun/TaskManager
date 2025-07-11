@@ -1,6 +1,12 @@
 # Task Manager API
 
 A full-stack task management application built with ASP.NET Core Web API and Angular.
+<img width="811" height="563" alt="image" src="https://github.com/user-attachments/assets/9c0f3f37-c517-4c65-8a53-4f13b8f43fb3" />
+
+<img width="1331" height="673" alt="image" src="https://github.com/user-attachments/assets/532baf1a-e306-49b6-a078-99392f8c1206" />
+
+<img width="1320" height="665" alt="image" src="https://github.com/user-attachments/assets/23a840f5-e23f-4644-81ee-3730b3fe34c7" />
+
 
 ## Authentication
 

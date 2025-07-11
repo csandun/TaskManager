@@ -1,20 +1,15 @@
-<div class="container-fluid p-3 mb-4 bg-white border rounded shadow-sm">
+<div class="container-fluid p-3 mb-4 bg-white">
   <div class="row g-2 align-items-end">
-    
+
     <div class="col-12 col-sm-6 col-md-4 col-lg-4">
       <div class="form-floating">
-        <input 
-          type="text" 
-          class="form-control" 
-          id="searchInput"
-          [(ngModel)]="searchTerm" 
-          placeholder="Search tasks">
+        <input type="text" class="form-control" id="searchInput" [(ngModel)]="searchTerm" placeholder="Search tasks">
         <label for="searchInput">
           <i class="bi bi-search me-2"></i>Search
         </label>
       </div>
     </div>
-    
+
     <div class="col-6 col-sm-3 col-md-3 col-lg-3">
       <div class="form-floating">
         <select class="form-select" id="filterSelect" [(ngModel)]="filterBy">
@@ -25,7 +20,7 @@
         <label for="filterSelect">Filter</label>
       </div>
     </div>
-    
+
     <div class="col-6 col-sm-3 col-md-3 col-lg-3">
       <div class="form-floating">
         <select class="form-select" id="sortSelect" [(ngModel)]="sortBy">
@@ -36,17 +31,13 @@
         <label for="sortSelect">Sort</label>
       </div>
     </div>
-    
+
     <div class="col-12 col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center justify-content-md-end">
-      <button 
-        type="button" 
-        class="btn btn-primary btn-lg rounded-circle d-flex align-items-center justify-content-center" 
-        (click)="onAddTask()" 
-        title="Add new task"
-        style="width: 56px; height: 56px;">
+      <button type="button" class="btn btn-primary btn-lg d-flex align-items-center justify-content-center"
+        (click)="onAddTask()" title="Add new task" style="width: 56px; height: 56px;">
         <i class="bi bi-plus fs-4"></i>
       </button>
     </div>
-    
+
   </div>
 </div>

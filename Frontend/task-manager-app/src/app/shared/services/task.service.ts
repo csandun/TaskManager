@@ -26,12 +26,10 @@ export class TaskService {
 
         return this.http.get<TaskItem[]>(`${this.taskUrl}/user/${userId}`).pipe(
             tap(tasks => {
-                console.log(`Loaded ${tasks.length} tasks for user ${userId}`);
                 this.tasksSubject.next(tasks);
                 this.loadingSubject.next(false);
             }),
             catchError(error => {
-                console.error('Failed to load tasks:', error);
                 this.errorSubject.next(this.formatError(error));
                 this.loadingSubject.next(false);
                 this.tasksSubject.next([]);
@@ -44,20 +42,22 @@ export class TaskService {
         return this.http.patch<TaskItem>(`${this.taskUrl}/${taskId}/complete?isCompleted=${isCompleted}`, {}).pipe(
             tap(updatedTask => {
                 const currentTasks = this.currentTasks;
-                const updatedTasks = currentTasks.map(task => 
-                    task.id === taskId ? { ...task, completed: isCompleted } : task
-                );
+                const updatedTasks = currentTasks.map(task => {
+                    if (task.id === taskId) {
+                        return { ...task, isCompleted: isCompleted };
+                    }
+                    return task;
+                });
+                
                 this.tasksSubject.next(updatedTasks);
             }),
             catchError(this.handleError.bind(this))
         );
     }
 
-    createTask(task: TaskItem): Observable<TaskItem> {
+    createTask(task: Omit<TaskItem, 'id' | 'createdAt'>): Observable<TaskItem> {
         return this.http.post<TaskItem>(this.taskUrl, task).pipe(
             tap(newTask => {
-                console.log('Task created:', newTask);
-                // Add to local task list
                 const currentTasks = this.currentTasks;
                 this.tasksSubject.next([...currentTasks, newTask]);
             }),
@@ -65,7 +65,30 @@ export class TaskService {
         );
     }
 
-  
+    updateTask(taskId: number, updates: Partial<TaskItem>): Observable<TaskItem> {
+        return this.http.put<TaskItem>(`${this.taskUrl}/${taskId}`, updates).pipe(
+            tap(updatedTask => {
+                const currentTasks = this.currentTasks;
+                const updatedTasks = currentTasks.map(task => 
+                    task.id === taskId ? updatedTask : task
+                );
+                this.tasksSubject.next(updatedTasks);
+            }),
+            catchError(this.handleError.bind(this))
+        );
+    }
+
+    deleteTask(taskId: number): Observable<void> {
+        return this.http.delete<void>(`${this.taskUrl}/${taskId}`).pipe(
+            tap(() => {
+                const currentTasks = this.currentTasks;
+                const filteredTasks = currentTasks.filter(task => task.id !== taskId);
+                this.tasksSubject.next(filteredTasks);
+            }),
+            catchError(this.handleError.bind(this))
+        );
+    }
+
     getCompletedTasks(): TaskItem[] {
         return this.currentTasks.filter(task => task.isCompleted);
     }
@@ -93,7 +116,6 @@ export class TaskService {
     }
 
     private handleError(error: any): Observable<never> {
-        console.error('Task service error:', error);
         this.errorSubject.next(this.formatError(error));
         return throwError(() => new Error(this.formatError(error)));
     }

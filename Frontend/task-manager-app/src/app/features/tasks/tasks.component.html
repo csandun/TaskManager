@@ -2,7 +2,12 @@
   <div class="row">
     <div class="col-12">
       
-      <app-task-controls (addTask)="onAddTask()"/>
+      <app-task-controls 
+        (addTask)="onAddTask()"
+        (searchTermChange)="onSearchTermChange($event)"
+        (filterByChange)="onFilterByChange($event)"
+        (sortByChange)="onSortByChange($event)">
+      </app-task-controls>
 
       <div *ngIf="isLoading" class="text-center p-4">
         <div class="spinner-border text-primary" role="status">
@@ -12,17 +17,15 @@
       </div>
 
       <div *ngIf="error" class="alert alert-danger mb-3" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
         {{ error }}
       </div>
 
       <app-task-list 
         *ngIf="!isLoading"
-        [tasks]="tasks"
+        [tasks]="filteredTasks"
         (taskToggle)="onTaskToggle($event)"
         (taskDelete)="onTaskDelete($event)"
-        (taskEdit)="onTaskEdit($event)"
-        >
+        (taskEdit)="onTaskEdit($event)">
       </app-task-list>
 
     </div>

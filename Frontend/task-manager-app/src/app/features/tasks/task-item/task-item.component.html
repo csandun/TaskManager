@@ -1,4 +1,4 @@
-<div class="card border-0 shadow-sm mb-3" [class.border-success]="task.isCompleted" [class.border-danger]="isOverdue()">
+<div class="card border-0 mb-3">
   <div class="card-body p-3">
     <div class="row align-items-start">
       
@@ -31,12 +31,12 @@
               </span>
               
               <small class="text-muted d-flex align-items-center">
-                <i class="bi bi-clock me-1"></i>
+                Created Date:
                 {{ task.createdAt | date:'short' }}
               </small>
               
               <small class="text-muted d-flex align-items-center" *ngIf="task.dueDate">
-                <i class="bi bi-calendar-event me-1" [class.text-danger]="isOverdue()"></i>
+                Due Date : 
                 {{ task.dueDate | date:'short' }}
               </small>
             </div>

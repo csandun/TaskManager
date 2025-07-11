@@ -2,6 +2,12 @@
 
 A full-stack task management application built with ASP.NET Core Web API and Angular.
 
+## Authentication
+
+The API uses Basic Authentication. A default user is seeded in the database:
+- **Username**: `csandun`
+- **Password**: `123`
+
 ## Technologies Used
 
 ### Backend
@@ -84,20 +90,6 @@ dotnet ef migrations add <MigrationName> --project Csandun.TaskManagerApi --star
 ### Update database
 ```bash
 dotnet ef database update --project Csandun.TaskManagerApi --startup-project Csandun.TaskManagerApi
-```
-
-
-## Authentication
-
-The API uses Basic Authentication. A default user is seeded in the database:
-- **Username**: `csandun`
-- **Password**: `123`
-
-### API Usage Example
-```bash
-# Get tasks (requires authentication)
-curl -X GET "https://localhost:7071/api/tasks" \
-  -H "Authorization: Basic Y3NhbmR1bjoxMjM="
 ```
 
 ## Development

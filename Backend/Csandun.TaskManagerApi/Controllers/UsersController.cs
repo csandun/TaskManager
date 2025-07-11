@@ -5,6 +5,7 @@ using Csandun.TaskManagerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using Csandun.TaskManagerApi.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Csandun.TaskManagerApi.Controllers;
 
@@ -13,6 +14,7 @@ namespace Csandun.TaskManagerApi.Controllers;
 public class UsersController(IUserRepository userRepository, IMapper mapper) : ControllerBase
 {
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<UserDto>> Login([FromBody] UserLoginDto loginDto, CancellationToken cancellationToken)
     {
         var user = await userRepository.Authenticate(loginDto.Username, loginDto.Password.HashPassword(), cancellationToken);

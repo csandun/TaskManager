@@ -4,19 +4,16 @@ using Csandun.TaskManagerApi.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Csandun.TaskManagerApi.Infrastructure.Migrations
+namespace Csandun.TaskManagerApi.Migrations
 {
     [DbContext(typeof(TaskManagerDbContext))]
-    [Migration("20250710061329_InitalOne")]
-    partial class InitalOne
+    partial class TaskManagerDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,6 +100,16 @@ namespace Csandun.TaskManagerApi.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 7, 11, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            PasswordHash = "8kJ2hJGHdJ0upccBDM08mch5/Jno5vN9GH3BBEXqZIU=",
+                            Username = "csandun"
+                        });
                 });
 
             modelBuilder.Entity("Csandun.TaskManagerApi.Models.TaskItem", b =>

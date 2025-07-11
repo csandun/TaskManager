@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Csandun.TaskManagerApi.Infrastructure.Migrations
+namespace Csandun.TaskManagerApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalOne : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,11 @@ namespace Csandun.TaskManagerApi.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "CreatedAt", "IsActive", "PasswordHash", "Username" },
+                values: new object[] { 1, new DateTime(2025, 7, 11, 0, 0, 0, 0, DateTimeKind.Utc), true, "8kJ2hJGHdJ0upccBDM08mch5/Jno5vN9GH3BBEXqZIU=", "csandun" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskItems_UserId",

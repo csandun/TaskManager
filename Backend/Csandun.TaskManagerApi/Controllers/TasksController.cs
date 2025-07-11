@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Csandun.TaskManagerApi.Infrastructure.Repositories;
 using Csandun.TaskManagerApi.Models;
 using AutoMapper;
+using Csandun.TaskManagerApi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Csandun.TaskManagerApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TasksController(ITaskItemRepository taskRepository, IMapper mapper) : ControllerBase
+[Authorize]
+public class TasksController(ITaskItemRepository taskRepository, IMapper mapper, UserContextAccessor accessor) : ControllerBase
 {
     [HttpGet("{id}")]
     public async Task<ActionResult<TaskItemDto>> GetById(int id, CancellationToken cancellationToken)
@@ -21,7 +24,9 @@ public class TasksController(ITaskItemRepository taskRepository, IMapper mapper)
     [HttpPost]
     public async Task<ActionResult<TaskItemDto>> Create([FromBody] TaskItemCreateDto taskItemCreateDto, CancellationToken cancellationToken)
     {
+        var userId = int.Parse(accessor.GetCurrentUserId());
         var taskItem = mapper.Map<TaskItem>(taskItemCreateDto);
+        taskItem.UserId = userId;
         var createdTask = await taskRepository.AddAsync(taskItem, cancellationToken);
         var createdTaskDto = mapper.Map<TaskItemDto>(createdTask);
         return CreatedAtAction(nameof(GetById), new { id = createdTask.Id }, createdTaskDto);
@@ -43,9 +48,10 @@ public class TasksController(ITaskItemRepository taskRepository, IMapper mapper)
         return NoContent();
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetByUserIdAndStatus(int userId, CancellationToken cancellationToken = default)
+    [HttpGet("")]
+    public async Task<ActionResult<IEnumerable<TaskItemDto>>> GetByUserIdAndStatus(CancellationToken cancellationToken = default)
     {
+        var userId = int.Parse(accessor.GetCurrentUserId());
         var tasks = await taskRepository.GetByUserIdAndStatusAsync(userId, cancellationToken);
         var taskDtos = mapper.Map<IEnumerable<TaskItemDto>>(tasks);
         return Ok(taskDtos);

@@ -15,12 +15,23 @@ public class UserRepository(TaskManagerDbContext dbContext) : IUserRepository
         return user;
     }
 
-    public async Task<User> GetByUsernameAsync(string username, string passwordHash, CancellationToken cancellationToken)
+    public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken)
+    {
+        var user = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Username == username, cancellationToken);
+        return user;
+    }
+
+    public async Task<User> Authenticate(string username, string passwordHash, CancellationToken cancellationToken)
     {
         var user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == passwordHash, cancellationToken);
-        if (user is null) throw new AuthenticationFailed(username);
 
+        if (user is null)
+        {
+            throw new UserNotFound(username);
+        }
+        
         return user;
     }
 }

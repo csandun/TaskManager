@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Csandun.TaskManagerApi.Exceptions;
 
 namespace Csandun.TaskManagerApi.Middleware;
 
@@ -21,28 +22,22 @@ public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExcep
     {
         context.Response.ContentType = "application/json";
 
-        var response = exception switch
+        var statusCode = exception switch
         {
-            KeyNotFoundException ex => new ErrorResponse
-            {
-                StatusCode = (int)HttpStatusCode.NotFound,
-                Message = ex.Message
-            },
-            ArgumentException ex => new ErrorResponse
-            {
-                StatusCode = (int)HttpStatusCode.BadRequest,
-                Message = ex.Message
-            },
-            UnauthorizedAccessException ex => new ErrorResponse
-            {
-                StatusCode = (int)HttpStatusCode.Unauthorized,
-                Message = ex.Message
-            },
-            _ => new ErrorResponse
-            {
-                StatusCode = (int)HttpStatusCode.InternalServerError,
-                Message = "An internal server error occurred"
-            }
+            UserNotFound => HttpStatusCode.Unauthorized,
+            TaskItemNotFound or KeyNotFoundException => HttpStatusCode.NotFound,
+            ArgumentException => HttpStatusCode.BadRequest,
+            UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+            _ => HttpStatusCode.InternalServerError
+        };
+
+        var response = new ErrorResponse
+        {
+            StatusCode = (int)statusCode,
+            Message = exception is UserNotFound or TaskItemNotFound or KeyNotFoundException or
+                ArgumentException or UnauthorizedAccessException
+                ? exception.Message
+                : "An internal server error occurred"
         };
 
         context.Response.StatusCode = response.StatusCode;

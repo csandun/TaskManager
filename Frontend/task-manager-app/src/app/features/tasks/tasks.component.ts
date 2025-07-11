@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { TaskItem, TaskPriority } from '../../shared/models/task-item.model';
 import { TaskListComponent } from './task-list/task-list.component';
 import { TaskControlsComponent } from "./task-controls/task-controls.component";
@@ -13,6 +16,9 @@ import { TaskService } from '../../shared/services/task.service';
     imports: [
         CommonModule,
         FormsModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatToolbarModule,
         TaskListComponent,
         TaskControlsComponent
     ],
@@ -240,6 +246,7 @@ export class TasksComponent implements OnInit, OnDestroy {
                 break;
         }
 
+        
         filtered.sort((a, b) => {
             if (a.isCompleted !== b.isCompleted) {
                 return a.isCompleted ? 1 : -1;
@@ -271,6 +278,7 @@ export class TasksComponent implements OnInit, OnDestroy {
     get pendingTasks(): TaskItem[] {
         return this.taskService.getPendingTasks();
     }
+
 
     get overdueTasks(): TaskItem[] {
         return this.taskService.getOverdueTasks();

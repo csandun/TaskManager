@@ -1,0 +1,36 @@
+name: Angular Frontend CI
+
+on:
+  push:
+    paths:
+      - 'Frontend/**'
+  pull_request:
+    paths:
+      - 'Frontend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: './Frontend/task-manager-app/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./Frontend/task-manager-app
+
+    - name: Lint
+      run: npm run lint
+      working-directory: ./Frontend/task-manager-app
+
+    - name: Build
+      run: npm run build
+      working-directory: ./Frontend/task-manager-app

@@ -86,7 +86,7 @@ The API uses Basic Authentication. A default user is seeded in the database:
    ```
    - Application will be available at `http://localhost:4200`
 
-**If you don’t want to use your private registry**  
+**If you need to use public registry**  
 1. Force npm to use the default public registry
 ```bash
    npm config set registry https://registry.npmjs.org/

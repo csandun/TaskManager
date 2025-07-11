@@ -5,47 +5,18 @@ A full-stack task management application built with ASP.NET Core Web API and Ang
 ## Technologies Used
 
 ### Backend
-- **ASP.NET Core 9.0** - Web API framework
-- **Entity Framework Core** - Object-relational mapping (ORM)
-- **SQL Server** - Database
-- **AutoMapper** - Object-to-object mapping
-- **BCrypt.Net** - Password hashing
-- **Swagger/OpenAPI** - API documentation
-- **Basic Authentication** - Custom authentication handler
+- **ASP.NET Core 9.0**
+- **Entity Framework Core Code First**
+- **SQL Server**
+- **AutoMapper**
+- **Swagger/OpenAPI**
+- **Basic Authentication**
 
 ### Frontend
-- **Angular** - Frontend framework
-- **TypeScript** - Programming language
-- **SCSS** - CSS preprocessor
+- **Angular**
+- **TypeScript**
+- **SCSS**
 
-### Development Tools
-- **.NET CLI** - Command-line interface
-- **Entity Framework Core Tools** - Database migrations
-- **Docker** - Containerization support
-
-## Project Structure
-
-```
-TaskManager/
-├── Backend/
-│   └── Csandun.TaskManagerApi/
-│       ├── Controllers/          # API controllers
-│       ├── Models/              # Domain models
-│       ├── DTOs/                # Data transfer objects
-│       ├── Infrastructure/      # Data access layer
-│       │   ├── DbContext/       # Entity Framework DbContext
-│       │   ├── Repositories/    # Repository pattern implementation
-│       │   ├── Configurations/  # Entity configurations
-│       │   └── Migrations/      # Database migrations
-│       ├── Services/            # Business logic layer
-│       ├── Middleware/          # Custom middleware
-│       ├── Handlers/            # Authentication handlers
-│       ├── Exceptions/          # Custom exceptions
-│       ├── Mappings/            # AutoMapper profiles
-│       └── Helpers/             # Utility classes
-└── Frontend/
-    └── task-manager-app/        # Angular application
-```
 
 ## Setup Instructions
 
@@ -72,12 +43,9 @@ TaskManager/
    - Edit `appsettings.json` or `appsettings.Development.json`
    - Update the `TaskManagerConnection` connection string to match your SQL Server instance
 
-4. **Create and run database migrations**
+4. **Create and update database migrations**
    ```bash
-   # Create initial migration (if needed)
-   dotnet ef migrations add InitialCreate --output-dir Infrastructure/Migrations
    
-   # Update database
    dotnet ef database update
    ```
 
@@ -85,8 +53,8 @@ TaskManager/
    ```bash
    dotnet run
    ```
-   - API will be available at `https://localhost:7071`
-   - Swagger documentation at `https://localhost:7071/swagger`
+   - API will be available at `http://localhost:5062`
+   - Swagger documentation at `http://localhost:5062/swagger`
 
 ### Frontend Setup
 
@@ -118,10 +86,6 @@ dotnet ef migrations add <MigrationName> --project Csandun.TaskManagerApi --star
 dotnet ef database update --project Csandun.TaskManagerApi --startup-project Csandun.TaskManagerApi
 ```
 
-### Remove last migration
-```bash
-dotnet ef migrations remove --project Csandun.TaskManagerApi --startup-project Csandun.TaskManagerApi
-```
 
 ## Authentication
 
@@ -136,35 +100,6 @@ curl -X GET "https://localhost:7071/api/tasks" \
   -H "Authorization: Basic Y3NhbmR1bjoxMjM="
 ```
 
-## API Endpoints
-
-### Tasks
-- `GET /api/tasks/{id}` - Get task by ID
-- `POST /api/tasks` - Create new task
-- `PUT /api/tasks/{id}` - Update task
-- `DELETE /api/tasks/{id}` - Delete task
-- `GET /api/tasks/user/{userId}` - Get tasks by user
-- `PATCH /api/tasks/{id}/complete` - Update task completion status
-
-### Users
-- `POST /api/users/login` - User login
-- `GET /api/users/{id}` - Get user by ID
-- `POST /api/users` - Create new user
-- `PUT /api/users/{id}` - Update user
-- `DELETE /api/users/{id}` - Delete user
-
-## Features
-
-- **CRUD operations** for tasks and users
-- **Authentication and authorization** with Basic Auth
-- **Global exception handling** middleware
-- **Automatic password hashing** with BCrypt
-- **Database seeding** for initial data
-- **CORS support** for Angular frontend
-- **Repository pattern** for data access
-- **DTO mapping** with AutoMapper
-- **API documentation** with Swagger
-
 ## Development
 
 ### Adding New Migrations
@@ -178,15 +113,5 @@ curl -X GET "https://localhost:7071/api/tasks" \
    dotnet ef database update
    ```
 
-### Running in Development
-- Backend: `dotnet run` or `dotnet watch run` for hot reload
-- Frontend: `ng serve` for development server with hot reload
 
-## Docker Support
 
-A Dockerfile is included for containerizing the API. To build and run:
-
-```bash
-docker build -t task-manager-api .
-docker run -p 8080:80 task-manager-api
-```

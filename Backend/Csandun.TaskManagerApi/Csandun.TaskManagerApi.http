@@ -1,6 +1,34 @@
-@Csandun.TaskManagerApi_HostAddress = http://localhost:5062
-
-GET {{Csandun.TaskManagerApi_HostAddress}}/weatherforecast/
-Accept: application/json
 
 ###
+@baseUrl = http://localhost:5062
+@username = csandun
+@password = 123
+# Base64 encoded credentials (csandun:123)
+@basicAuth = Y3NhbmR1bjoxMjM=
+
+### 
+GET {{baseUrl}}/api/tasks/1
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+### 
+GET {{baseUrl}}/api/tasks/user/1
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+### 
+POST {{baseUrl}}/api/tasks
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json
+
+{
+    "title": "Test Task from API",
+    "description": "This is a test task created via API",
+    "priority": 1,
+    "dueDate": "2025-07-15T10:00:00Z"
+}
+
+### 
+PATCH {{baseUrl}}/api/tasks/1/complete?isCompleted=true
+Authorization: Basic {{basicAuth}}
+Content-Type: application/json

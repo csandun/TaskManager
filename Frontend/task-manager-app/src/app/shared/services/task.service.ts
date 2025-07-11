@@ -3,12 +3,13 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { TaskItem } from '../models/task-item.model';
 import { AuthService } from './login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TaskService {
-    private taskUrl = 'http://localhost:5062/api/tasks';
+    private taskUrl = `${environment.apiBaseUrl}/tasks`;
     private http = inject(HttpClient);
     private authService = inject(AuthService);
 

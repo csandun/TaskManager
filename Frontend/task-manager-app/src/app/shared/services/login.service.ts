@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginRequest, User } from '../models/user.model';
-
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private readonly API_URL = 'http://localhost:5062/api/Users';
+    private readonly API_URL = `${environment.apiBaseUrl}/Users`;
 
     private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasValidToken());
     private currentUserSubject = new BehaviorSubject<any>(this.getCurrentUser());

@@ -9,6 +9,7 @@ import { TaskItem, TaskPriority } from '../../shared/models/task-item.model';
 import { TaskListComponent } from './task-list/task-list.component';
 import { TaskControlsComponent } from "./task-controls/task-controls.component";
 import { TaskService } from '../../shared/services/task.service';
+import { AuthService } from '../../shared/services/login.service';
 
 @Component({
     standalone: true,
@@ -28,12 +29,14 @@ import { TaskService } from '../../shared/services/task.service';
 export class TasksComponent implements OnInit, OnDestroy {
 
     private taskService = inject(TaskService);
+    private authService = inject(AuthService);
     private subscriptions = new Subscription();
 
     tasks: TaskItem[] = [];
     filteredTasks: TaskItem[] = [];
     isLoading: boolean = false;
     error: string | null = null;
+    currentUser: any = null;
 
     searchTerm: string = '';
     filterBy: string = 'all';
@@ -47,6 +50,12 @@ export class TasksComponent implements OnInit, OnDestroy {
     TaskPriority = TaskPriority;
 
     ngOnInit() {
+        this.subscriptions.add(
+            this.authService.currentUser$.subscribe(user => {
+                this.currentUser = user;
+            })
+        );
+
         this.subscriptions.add(
             this.taskService.tasks$.subscribe(tasks => {
                 this.tasks = tasks;
@@ -62,7 +71,7 @@ export class TasksComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.error = null;
 
-        this.taskService.loadTasksForUser(1).subscribe({
+        this.taskService.loadTasksForUser().subscribe({
             next: (tasks) => {
                 this.isLoading = false;
             },
@@ -155,7 +164,7 @@ export class TasksComponent implements OnInit, OnDestroy {
             isCompleted: false,
             priority: +this.newTask.priority, // Convert to number
             dueDate: this.newTask.dueDate ? new Date(this.newTask.dueDate) : undefined,
-            userId: 1
+            userId: this.currentUser?.id || 1
         } as TaskItem;
 
         this.taskService.createTask(taskToCreate).subscribe({
@@ -246,7 +255,7 @@ export class TasksComponent implements OnInit, OnDestroy {
                 break;
         }
 
-        
+
         filtered.sort((a, b) => {
             if (a.isCompleted !== b.isCompleted) {
                 return a.isCompleted ? 1 : -1;
@@ -271,16 +280,16 @@ export class TasksComponent implements OnInit, OnDestroy {
         this.filteredTasks = filtered;
     }
 
-    get completedTasks(): TaskItem[] {
+    get completedTasks() {
         return this.taskService.getCompletedTasks();
     }
 
-    get pendingTasks(): TaskItem[] {
+    get pendingTasks() {
         return this.taskService.getPendingTasks();
     }
 
 
-    get overdueTasks(): TaskItem[] {
+    get overdueTasks(){
         return this.taskService.getOverdueTasks();
     }
 

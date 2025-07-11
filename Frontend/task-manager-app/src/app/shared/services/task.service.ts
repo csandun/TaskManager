@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, BehaviorSubject, catchError, tap, throwError } from 'rxjs';
 import { TaskItem } from '../models/task-item.model';
+import { AuthService } from './login.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,7 @@ import { TaskItem } from '../models/task-item.model';
 export class TaskService {
     private taskUrl = 'http://localhost:5062/api/tasks';
     private http = inject(HttpClient);
+    private authService = inject(AuthService);
 
     private tasksSubject = new BehaviorSubject<TaskItem[]>([]);
     private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -20,11 +22,14 @@ export class TaskService {
         return this.tasksSubject.value;
     }
 
-    loadTasksForUser(userId: number): Observable<TaskItem[]> {
+    loadTasksForUser(userId?: number): Observable<TaskItem[]> {
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
 
-        return this.http.get<TaskItem[]>(`${this.taskUrl}/user/${userId}`).pipe(
+        const currentUser = this.authService.getCurrentUser();
+        const userIdToUse = userId || currentUser?.id || 1;
+
+        return this.http.get<TaskItem[]>(`${this.taskUrl}`).pipe(
             tap(tasks => {
                 this.tasksSubject.next(tasks);
                 this.loadingSubject.next(false);
@@ -66,7 +71,7 @@ export class TaskService {
         );
     }
 
-    updateTask(taskId: number, updates: Partial<TaskItem>): Observable<TaskItem> {
+    updateTask(taskId: number, updates: Partial<TaskItem>) {
         return this.http.put<TaskItem>(`${this.taskUrl}/${taskId}`, updates).pipe(
             tap(updatedTask => {
                 const currentTasks = this.currentTasks;
@@ -79,7 +84,7 @@ export class TaskService {
         );
     }
 
-    deleteTask(taskId: number): Observable<void> {
+    deleteTask(taskId: number) {
         return this.http.delete<void>(`${this.taskUrl}/${taskId}`).pipe(
             tap(() => {
                 const currentTasks = this.currentTasks;
@@ -90,15 +95,15 @@ export class TaskService {
         );
     }
 
-    getCompletedTasks(): TaskItem[] {
+    getCompletedTasks() {
         return this.currentTasks.filter(task => task.isCompleted);
     }
 
-    getPendingTasks(): TaskItem[] {
+    getPendingTasks() {
         return this.currentTasks.filter(task => !task.isCompleted);
     }
 
-    getOverdueTasks(): TaskItem[] {
+    getOverdueTasks() {
         return this.currentTasks.filter(task => 
             !task.isCompleted && 
             task.dueDate && 
@@ -116,7 +121,7 @@ export class TaskService {
         return 'An unknown error occurred';
     }
 
-    private handleError(error: any): Observable<never> {
+    private handleError(error: any){
         this.errorSubject.next(this.formatError(error));
         return throwError(() => new Error(this.formatError(error)));
     }

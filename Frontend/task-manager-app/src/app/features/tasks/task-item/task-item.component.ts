@@ -42,7 +42,7 @@ export class TaskItemComponent {
       case TaskPriority.HIGH:
         return 'orange';
       case TaskPriority.MEDIUM:
-        return 'yellow';
+        return 'blue';
       case TaskPriority.LOW:
         return 'green';
       default:

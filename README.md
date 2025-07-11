@@ -86,6 +86,19 @@ The API uses Basic Authentication. A default user is seeded in the database:
    ```
    - Application will be available at `http://localhost:4200`
 
+**If you don’t want to use your private registry**  
+1. Force npm to use the default public registry
+```bash
+   npm config set registry https://registry.npmjs.org/
+```
+
+2. Delete lock file and reinstall dependencies
+```bash
+   rm package-lock.json
+   rm -rf node_modules
+   npm install
+```
+
 ## Database Migration Commands
 
 ### Create a new migration

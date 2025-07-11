@@ -1,7 +1,9 @@
 <div class="container-fluid p-4">
   <div class="row">
     <div class="col-12">
+
       
+
       <app-task-controls 
         (addTask)="onAddTask()"
         (searchTermChange)="onSearchTermChange($event)"
@@ -19,6 +21,7 @@
       <div *ngIf="error" class="alert alert-danger mb-3" role="alert">
         {{ error }}
       </div>
+      
 
       <app-task-list 
         *ngIf="!isLoading"
@@ -29,5 +32,89 @@
       </app-task-list>
 
     </div>
+  </div>
+</div>
+
+<div *ngIf="showAddTaskSlider" class="slider-overlay" (click)="onCloseAddTaskSlider()">
+</div>
+
+<div class="add-task-slider" [class.show]="showAddTaskSlider">
+  <div class="slider-header">
+    <h4 class="mb-0">
+      {{ isEditMode ? 'Edit Task' : 'Add New Task' }}
+    </h4>
+    <button type="button" class="btn-close" (click)="onCloseAddTaskSlider()"></button>
+  </div>
+  
+  <div class="slider-content">
+    <form (ngSubmit)="onSaveNewTask()" #taskForm="ngForm">
+      
+      <div class="mb-3">
+        <label for="taskTitle" class="form-label">Task Title *</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="taskTitle"
+          [(ngModel)]="newTask.title"
+          name="title"
+          required
+          placeholder="Enter task title">
+      </div>
+
+      <div class="mb-3">
+        <label for="taskDescription" class="form-label">Description</label>
+        <textarea 
+          class="form-control" 
+          id="taskDescription"
+          [(ngModel)]="newTask.description"
+          name="description"
+          rows="3"
+          placeholder="Enter task description (optional)">
+        </textarea>
+      </div>
+
+
+
+      <div class="mb-3">
+        <label for="taskPriority" class="form-label">Priority</label>
+        <select 
+          class="form-select" 
+          id="taskPriority"
+          [(ngModel)]="newTask.priority"
+          name="priority">
+          <option [value]="TaskPriority.LOW">Low</option>
+          <option [value]="TaskPriority.MEDIUM">Medium</option>
+          <option [value]="TaskPriority.HIGH">High</option>
+          <option [value]="TaskPriority.URGENT">Urgent</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label for="taskDueDate" class="form-label">Due Date</label>
+        <input 
+          type="date" 
+          class="form-control" 
+          id="taskDueDate"
+          [(ngModel)]="newTask.dueDate"
+          name="dueDate">
+      </div>
+
+      <div class="slider-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary me-2" 
+          (click)="onCloseAddTaskSlider()">
+          Cancel
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [class.btn-edit]="isEditMode"
+          [disabled]="!taskForm.form.valid">
+          {{ isEditMode ? 'Update Task' : 'Create Task' }}
+        </button>
+      </div>
+
+    </form>
   </div>
 </div>

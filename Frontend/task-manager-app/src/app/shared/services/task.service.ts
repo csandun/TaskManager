@@ -55,7 +55,8 @@ export class TaskService {
         );
     }
 
-    createTask(task: Omit<TaskItem, 'id' | 'createdAt'>): Observable<TaskItem> {
+    createTask(task: TaskItem): Observable<TaskItem> {
+        debugger
         return this.http.post<TaskItem>(this.taskUrl, task).pipe(
             tap(newTask => {
                 const currentTasks = this.currentTasks;

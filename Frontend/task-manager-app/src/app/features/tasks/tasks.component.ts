@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { TaskItem, TaskPriority } from '../../shared/models/task-item.model';
 import { TaskListComponent } from './task-list/task-list.component';
@@ -11,6 +12,7 @@ import { TaskService } from '../../shared/services/task.service';
     selector: 'app-tasks',
     imports: [
         CommonModule,
+        FormsModule,
         TaskListComponent,
         TaskControlsComponent
     ],
@@ -30,6 +32,13 @@ export class TasksComponent implements OnInit, OnDestroy {
     searchTerm: string = '';
     filterBy: string = 'all';
     sortBy: string = 'createdAt';
+
+    showAddTaskSlider: boolean = false;
+    isEditMode: boolean = false;
+    editingTaskId: number | null = null;
+    newTask = {} as TaskItem;
+
+    TaskPriority = TaskPriority;
 
     ngOnInit() {
         this.subscriptions.add(
@@ -91,27 +100,100 @@ export class TasksComponent implements OnInit, OnDestroy {
     }
 
     onTaskEdit(taskId: number) {
+        const taskToEdit = this.tasks.find(task => task.id === taskId);
+        if (taskToEdit) {
+            this.isEditMode = true;
+            this.editingTaskId = taskId;
+            this.newTask = {
+                id: taskToEdit.id,
+                title: taskToEdit.title,
+                description: taskToEdit.description || '',
+                priority: taskToEdit.priority,
+                dueDate: taskToEdit.dueDate 
+            } as TaskItem;
+            this.showAddTaskSlider = true;
+        }
     }
 
     onAddTask() {
-        const newTask = {
-            title: 'New Task from UI',
-            description: 'Task created from the user interface',
-            isCompleted: false,
-            priority: TaskPriority.MEDIUM,
-            dueDate: new Date(),
-            userId: 1
-        };
+        this.isEditMode = false;
+        this.editingTaskId = null;
+        this.resetNewTaskForm();
+        this.showAddTaskSlider = true;
+    }
 
-        this.taskService.createTask(newTask).subscribe({
+    onCloseAddTaskSlider() {
+        this.showAddTaskSlider = false;
+        this.isEditMode = false;
+        this.editingTaskId = null;
+        this.resetNewTaskForm();
+    }
+
+    onSaveNewTask() {
+        if (!this.newTask.title.trim()) {
+            alert('Task title is required');
+            return;
+        }
+
+        if (this.isEditMode && this.editingTaskId) {
+            this.updateExistingTask();
+        } else {
+            this.createNewTask();
+        }
+    }
+
+    private createNewTask() {
+        const taskToCreate = {
+            title: this.newTask.title.trim(),
+            description: this.newTask.description?.trim(),
+            isCompleted: false,
+            priority: +this.newTask.priority, // Convert to number
+            dueDate: this.newTask.dueDate ? new Date(this.newTask.dueDate) : undefined,
+            userId: 1
+        } as TaskItem;
+
+        this.taskService.createTask(taskToCreate).subscribe({
             next: (createdTask) => {
                 this.error = null;
+                this.onCloseAddTaskSlider();
             },
             error: (error) => {
                 this.error = error.message;
                 alert(`Failed to create task: ${error.message}`);
             }
         });
+    }
+
+    private updateExistingTask() {
+        if (!this.editingTaskId) return;
+
+        const updates = {
+            id: this.editingTaskId,
+            title: this.newTask.title.trim(),
+            description: this.newTask.description?.trim(),
+            priority: +this.newTask.priority, 
+            dueDate: this.newTask.dueDate ? new Date(this.newTask.dueDate) : undefined
+        };
+
+        this.taskService.updateTask(this.editingTaskId, updates).subscribe({
+            next: (updatedTask) => {
+                this.error = null;
+                this.onCloseAddTaskSlider();
+            },
+            error: (error) => {
+                this.error = error.message;
+                alert(`Failed to update task: ${error.message}`);
+            }
+        });
+    }
+
+    private resetNewTaskForm() {
+        this.newTask = {
+            title: '',
+            description: '',
+            priority: TaskPriority.MEDIUM,
+            dueDate: undefined
+        } as TaskItem;
     }
 
     onSearchTermChange(searchTerm: string) {

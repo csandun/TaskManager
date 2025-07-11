@@ -12,6 +12,6 @@ export interface TaskItem {
   isCompleted: boolean;
   priority: TaskPriority;
   dueDate?: Date;
-  createdAt: Date;
-  userId: number;
+  createdAt : Date;
+  userId?: number;
 }
